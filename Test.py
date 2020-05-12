@@ -1,6 +1,6 @@
-from helper import *
+from params import *
 from tkinter.filedialog import askopenfilename
-from Graph import Graph
+from Gantt import Graph
 
 
 class Test(tkinter.Frame):
@@ -8,9 +8,10 @@ class Test(tkinter.Frame):
         tkinter.Frame.__init__(self, parent)
         self.controller = controller
 
-        self.button = tkinter.Button(self, text='Назад', font=font, command=lambda: self.reset_frame()).place(x=0, y=0)
+        self.button = tkinter.Button(self, text='Назад', font=font, bg=light_grey_color, fg=dark_grey_color,
+                                     command=lambda: self.reset_frame()).place(x=0, y=0)
 
-        tkinter.Button(self, text='Оберіть файл з вхідними даними', font=font,
+        tkinter.Button(self, text='Оберіть файл з вхідними даними', font=font, bg=blue_color, fg='white',
                        command=lambda: self.get_filename()).pack(pady=25)
 
         self.literal = tkinter.Label(self, text='Обраний файл', font=font)
@@ -19,7 +20,8 @@ class Test(tkinter.Frame):
         self.text.set('')
         self.label = tkinter.Label(self, textvariable=self.text, font=font, borderwidth=3, relief="groove", pady=20)
 
-        self.button = tkinter.Button(self, text='Продовжити', font=font, command=lambda: self.call_graph())
+        self.button = tkinter.Button(self, text='Продовжити', font=font, bg=blue_color, fg='white',
+                                     command=lambda: self.call_graph())
 
     def get_filename(self):
         filename = askopenfilename()
@@ -35,4 +37,4 @@ class Test(tkinter.Frame):
 
     def call_graph(self):
         self.controller.frames[Graph].set(self.text)
-        self.controller.frames[Graph].tkraise()
+        self.controller.frames[Graph].draw_graph().tkraise()

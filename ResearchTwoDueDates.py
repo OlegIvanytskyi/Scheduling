@@ -1,5 +1,5 @@
-from helper import *
-from Graph import Graph
+from params import *
+from Gantt import Graph
 
 
 class ResearchTwoDueDates(tkinter.Frame):

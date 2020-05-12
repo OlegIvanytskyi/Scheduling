@@ -1,7 +1,8 @@
 import MainPage
-from helper import *
+from params import *
 from numpy import linspace
 import matplotlib.pyplot as plt
+from scheduling import decide
 
 
 class Graph(tkinter.Frame):
@@ -11,14 +12,33 @@ class Graph(tkinter.Frame):
         self.filename = ''
 
     def reset_frame(self):
+        for child in self.winfo_children():
+            child.destroy()
         from Test import Test
         self.controller.frames[Test].tkraise()
 
     def set(self, stringvar):
         self.filename = stringvar.get()
 
+    def get_schedule(self):
+        with open(self.filename, 'r') as f:
+            num_d = int(f.readline())
+            num_jobs = []
+            jobs = []
+            d = []
+
+            for _ in range(num_d):
+                num_jobs.append(int(f.readline()))
+                jobs.append([int(job) for job in f.readline().split()])
+                d.append(int(f.readline()))
+            num_machines = [int(num) for num in f.readline().split()]
+            machines = [int(machine) for machine in f.readline().split()]
+        return decide(num_d, num_jobs, jobs, d, num_machines, machines)
+
     def draw_graph(self):
         self.button = tkinter.Button(self, text='Назад', font=font, command=lambda: self.reset_frame()).pack()
+
+        schedule = self.get_schedule()
 
         fig, gnt = plt.subplots()
 

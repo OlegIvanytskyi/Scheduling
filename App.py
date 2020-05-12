@@ -1,6 +1,6 @@
-from helper import *
+from params import *
 from MainPage import MainPage
-from Graph import Graph
+from Gantt import Graph
 from Test import Test
 from ResearchOneDueDate import ResearchOneDueDate
 from ResearchTwoDueDates import ResearchTwoDueDates
@@ -11,12 +11,13 @@ class App(tkinter.Tk):
         tkinter.Tk.__init__(self, *args, **kwargs)
 
         tkinter.Tk.wm_title(self, 'Scheduling')
-        tkinter.Tk.geometry(self, '740x300')
+        tkinter.Tk.geometry(self, '740x600')
 
         container = tkinter.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
+
 
         self.frames = {}
 
@@ -34,5 +35,8 @@ class App(tkinter.Tk):
 
         self.frames[Graph] = Graph(container, self)
         self.frames[Graph].grid(row=0, column=0, sticky='nsew')
+
+        for _, frame in self.frames.items():
+            frame.configure(bg='white')
 
         self.frames[MainPage].tkraise()
