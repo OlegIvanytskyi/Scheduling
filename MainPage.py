@@ -1,5 +1,5 @@
 from helper import *
-from Graph import Graph
+from Gantt import Graph
 from Test import Test
 from ResearchOneDueDate import ResearchOneDueDate
 from ResearchTwoDueDates import ResearchTwoDueDates
