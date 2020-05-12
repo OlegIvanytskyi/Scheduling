@@ -1,5 +1,6 @@
 from helper import *
 from tkinter.filedialog import askopenfilename
+from Graph import Graph
 
 
 class Test(tkinter.Frame):
@@ -18,7 +19,7 @@ class Test(tkinter.Frame):
         self.text.set('')
         self.label = tkinter.Label(self, textvariable=self.text, font=font, borderwidth=3, relief="groove", pady=20)
 
-        self.button = tkinter.Button(self, text='Продовжити', font=font, command=lambda: self.get_filename())
+        self.button = tkinter.Button(self, text='Продовжити', font=font, command=lambda: self.call_graph())
 
     def get_filename(self):
         filename = askopenfilename()
@@ -31,3 +32,7 @@ class Test(tkinter.Frame):
     def reset_frame(self):
         from MainPage import MainPage
         self.controller.frames[MainPage].tkraise()
+
+    def call_graph(self):
+        self.controller.frames[Graph].set(self.text)
+        self.controller.frames[Graph].tkraise()
