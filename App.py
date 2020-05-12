@@ -1,8 +1,7 @@
 from helper import *
 from MainPage import MainPage
 from Graph import Graph
-from TestOneDueDate import TestOneDueDate
-from TestTwoDueDates import TestTwoDueDates
+from Test import Test
 from ResearchOneDueDate import ResearchOneDueDate
 from ResearchTwoDueDates import ResearchTwoDueDates
 
@@ -12,7 +11,7 @@ class App(tkinter.Tk):
         tkinter.Tk.__init__(self, *args, **kwargs)
 
         tkinter.Tk.wm_title(self, 'Scheduling')
-        tkinter.Tk.geometry(self, '775x300')
+        tkinter.Tk.geometry(self, '740x300')
 
         container = tkinter.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -24,11 +23,8 @@ class App(tkinter.Tk):
         self.frames[MainPage] = MainPage(container, self)
         self.frames[MainPage].grid(row=0, column=0, sticky='nsew')
 
-        self.frames[TestOneDueDate] = TestOneDueDate(container, self)
-        self.frames[TestOneDueDate].grid(row=0, column=0, sticky='nsew')
-
-        self.frames[TestTwoDueDates] = TestTwoDueDates(container, self)
-        self.frames[TestTwoDueDates].grid(row=0, column=0, sticky='nsew')
+        self.frames[Test] = Test(container, self)
+        self.frames[Test].grid(row=0, column=0, sticky='nsew')
 
         self.frames[ResearchOneDueDate] = ResearchOneDueDate(container, self)
         self.frames[ResearchOneDueDate].grid(row=0, column=0, sticky='nsew')
