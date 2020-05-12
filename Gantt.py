@@ -22,18 +22,18 @@ class Graph(tkinter.Frame):
 
     def get_schedule(self):
         with open(self.filename, 'r') as f:
-            num_d = int(f.readline())
-            num_jobs = []
-            jobs = []
-            d = []
+            self.num_d = int(f.readline())
+            self.num_jobs = []
+            self.jobs = []
+            self.d = []
 
-            for _ in range(num_d):
-                num_jobs.append(int(f.readline()))
-                jobs.append([int(job) for job in f.readline().split()])
-                d.append(int(f.readline()))
-            num_machines = [int(num) for num in f.readline().split()]
-            machines = [int(machine) for machine in f.readline().split()]
-        return decide(num_d, num_jobs, jobs, d, num_machines, machines)
+            for _ in range(self.num_d):
+                self.num_jobs.append(int(f.readline()))
+                self.jobs.append([int(job) for job in f.readline().split()])
+                self.d.append(int(f.readline()))
+            self.num_machines = int(f.readline())
+            self.machines = [int(machine) for machine in f.readline().split()]
+        return decide(self.num_d, self.num_jobs, self.jobs, self.d, self.num_machines, self.machines)
 
     def draw_graph(self):
         self.button = tkinter.Button(self, text='Назад', font=font, command=lambda: self.reset_frame()).pack()
@@ -41,31 +41,25 @@ class Graph(tkinter.Frame):
         schedule = self.get_schedule()
 
         fig, gnt = plt.subplots()
+        gnt.set_title('Побудований розклад')
 
-        gnt.set_ylim(0, 50)
-        gnt.set_xlim(0, 160)
+        gnt.set_ylim(0, (self.num_machines + 1) * 10 + 10)
+        gnt.set_xlim(0, max([sum([job[1] for job in machine]) for machine in schedule]) + 5)  # max of all schedules+10
 
         gnt.set_xlabel('Час')
         gnt.set_ylabel('Машина')
 
-        gnt.set_yticks([15, 25, 35])
-        gnt.set_yticklabels(['1', '2', '3'])
-
         gnt.grid(True)
 
-        gnt.broken_barh([(40, 50)], (30, 9), facecolors=('tab:orange'))
+        yticks = [(i + 1) * 10 + 5 for i in range(self.num_machines)]
+        yticklabels = [str(i + 1) for i in range(self.num_machines)]
+        gnt.set_yticks(yticks)
+        gnt.set_yticklabels(yticklabels)
 
-        gnt.broken_barh([(110, 10), (150, 10)], (10, 9), facecolors='tab:blue')
-
-        gnt.broken_barh([(10, 50), (100, 20), (130, 10)], (20, 9), facecolors=('tab:red'))
-
-        # f = Figure(figsize=(4, 4), dpi=75)
-        # a = f.add_subplot(1, 1, 1)
-        # a.set_title('kek')
-        #
-        # x = linspace(1, 100, num=10)
-        # a.plot(x, [l*2 for l in x], 'ro', x, [l+2 for l in x], 'b--', x, x, 'g--')
-        # a.legend(['perfect', '2.1', '2.2'])
+        for i in range(self.num_machines):
+            gnt.broken_barh(schedule[i], ((i + 1) * 10, 9),
+                            facecolors=('tab:orange', 'tab:green', 'tab:blue') * len(schedule))  # mark each job with
+                                                                                                 # different color
 
         canvas = FigureCanvasTkAgg(fig, self)
         canvas.draw()
