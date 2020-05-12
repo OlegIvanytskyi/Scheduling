@@ -1,8 +1,19 @@
+from copy import deepcopy
+
+
 def decide(num_d, num_jobs, jobs, d, num_machines, machines):
+    # working with copies not to change original data
+    num_d_copy = num_d
+    num_jobs_copy = deepcopy(num_jobs)
+    jobs_copy = deepcopy(jobs)
+    d_copy = deepcopy(d)
+    num_machines_copy = num_machines
+    machines_copy = deepcopy(machines)
+
     if num_d == 1:
-        return one_due_date(num_d, num_jobs, jobs, d, num_machines, machines)
+        return one_due_date(num_d_copy, num_jobs_copy, jobs_copy, d_copy, num_machines_copy, machines_copy)
     elif num_d == 2:
-        return two_due_dates(num_d, num_jobs, jobs, d, num_machines, machines)
+        return two_due_dates(num_d_copy, num_jobs_copy, jobs_copy, d_copy, num_machines_copy, machines_copy)
     else:
         # TODO unsupported number of due dates
         return None
@@ -25,15 +36,16 @@ def two_due_dates(num_d, num_jobs, jobs, d, num_machines, machines):
 
 
 def SPT(num_jobs, jobs, num_machines, machines):
-    pass
+
+    return 0
 
 
 def loose_due_date(num_jobs, jobs, num_machines, machines):
-    pass
+    return 0
 
 
 def tight_due_date(num_jobs, jobs, num_machines, machines):
-    pass
+    return 0
 
 
 def impossible(schedule):
