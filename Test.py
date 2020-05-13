@@ -37,4 +37,4 @@ class Test(tkinter.Frame):
 
     def call_graph(self):
         self.controller.frames[Graph].set(self.text)
-        self.controller.frames[Graph].draw_graph().tkraise()
+        self.controller.frames[Graph].draw_graph()
