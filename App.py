@@ -1,6 +1,6 @@
 from params import *
 from MainPage import MainPage
-from Gantt import Graph
+from Gantt import Gantt
 from Test import Test
 from ResearchOneDueDate import ResearchOneDueDate
 from ResearchTwoDueDates import ResearchTwoDueDates
@@ -33,8 +33,8 @@ class App(tkinter.Tk):
         self.frames[ResearchTwoDueDates] = ResearchTwoDueDates(container, self)
         self.frames[ResearchTwoDueDates].grid(row=0, column=0, sticky='nsew')
 
-        self.frames[Graph] = Graph(container, self)
-        self.frames[Graph].grid(row=0, column=0, sticky='nsew')
+        self.frames[Gantt] = Gantt(container, self)
+        self.frames[Gantt].grid(row=0, column=0, sticky='nsew')
 
         for _, frame in self.frames.items():
             frame.configure(bg='white')

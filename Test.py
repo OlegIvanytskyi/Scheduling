@@ -1,6 +1,6 @@
 from params import *
 from tkinter.filedialog import askopenfilename
-from Gantt import Graph
+from Gantt import Gantt
 
 
 class Test(tkinter.Frame):
@@ -36,5 +36,5 @@ class Test(tkinter.Frame):
         self.controller.frames[MainPage].tkraise()
 
     def call_graph(self):
-        self.controller.frames[Graph].set(self.text)
-        self.controller.frames[Graph].draw_graph()
+        self.controller.frames[Gantt].set(self.text)
+        self.controller.frames[Gantt].draw_graph()

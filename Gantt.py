@@ -5,11 +5,12 @@ import matplotlib.pyplot as plt
 from scheduling import decide
 
 
-class Graph(tkinter.Frame):
+class Gantt(tkinter.Frame):
     def __init__(self, parent, controller):
         tkinter.Frame.__init__(self, parent)
         self.controller = controller
         self.filename = ''
+        #self.draw_graph().tkraise()
 
     def reset_frame(self):
         for child in self.winfo_children():
@@ -58,14 +59,15 @@ class Graph(tkinter.Frame):
 
         for i in range(self.num_machines):
             gnt.broken_barh(schedule[i], ((i + 1) * 10, 9),
-                            facecolors=('tab:orange', 'tab:green', 'tab:blue') * len(schedule))  # mark each job with
-                                                                                                 # different color
+                            facecolors=('orange', 'green', 'blue') * len(schedule),  # mark each job with diff color
+                            edgecolors='black')  # color of borders
 
-        canvas = FigureCanvasTkAgg(fig, self)
-        canvas.draw()
-        canvas.get_tk_widget().pack(side=tkinter.BOTTOM, fill=tkinter.BOTH, expand=True)
+        fig.show()
+        #canvas = FigureCanvasTkAgg(fig, self)
+        #canvas.draw()
+        #canvas.get_tk_widget().pack(side=tkinter.BOTTOM, fill=tkinter.BOTH, expand=True)
 
-        toolbar = NavigationToolbar2Tk(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
+        #toolbar = NavigationToolbar2Tk(canvas, self)
+        #toolbar.update()
+        #canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
         return self
