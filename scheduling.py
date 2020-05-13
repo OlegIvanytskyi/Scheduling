@@ -36,8 +36,8 @@ def two_due_dates(num_jobs, jobs, d, num_machines, machines):
 
 
 def SPT(num_jobs, jobs, num_machines, machines):
-    machines = sorted(machines)
-    jobs = sorted(jobs, reverse=True)
+    machines = sorted(machines, reverse=True)
+    jobs = sorted(jobs)
 
     schedule = [[] for _ in range(num_machines)]
 
@@ -53,6 +53,9 @@ def SPT(num_jobs, jobs, num_machines, machines):
 
 
 def loose_due_date(num_jobs, jobs, num_machines, machines):
+    machines = sorted(machines)
+    # jobs = sorted(jobs, reverse)
+
     return 0
 
 
