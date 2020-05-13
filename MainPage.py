@@ -1,5 +1,4 @@
 from params import *
-from Gantt import Graph
 from Test import Test
 from ResearchOneDueDate import ResearchOneDueDate
 from ResearchTwoDueDates import ResearchTwoDueDates

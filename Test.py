@@ -36,5 +36,5 @@ class Test(tkinter.Frame):
         self.controller.frames[MainPage].tkraise()
 
     def call_graph(self):
-        self.controller.frames[Gantt].set(self.text)
-        self.controller.frames[Gantt].draw_graph()
+        gantt = Gantt(self.text.get())
+        gantt.draw_graph()

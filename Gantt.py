@@ -1,25 +1,11 @@
-import MainPage
-from params import *
-from numpy import linspace
 import matplotlib.pyplot as plt
 from scheduling import decide
 
 
-class Gantt(tkinter.Frame):
-    def __init__(self, parent, controller):
-        tkinter.Frame.__init__(self, parent)
-        self.controller = controller
-        self.filename = ''
-        #self.draw_graph().tkraise()
+class Gantt():
+    def __init__(self, path):
+        self.filename = path
 
-    def reset_frame(self):
-        for child in self.winfo_children():
-            child.destroy()
-        from Test import Test
-        self.controller.frames[Test].tkraise()
-
-    def set(self, stringvar):
-        self.filename = stringvar.get()
 
     def get_schedule(self):
         with open(self.filename, 'r') as f:
@@ -37,8 +23,6 @@ class Gantt(tkinter.Frame):
         return decide(self.num_d, self.num_jobs, self.jobs, self.d, self.num_machines, self.machines)
 
     def draw_graph(self):
-        self.button = tkinter.Button(self, text='Назад', font=font, command=lambda: self.reset_frame()).pack()
-
         schedule = self.get_schedule()
 
         fig, gnt = plt.subplots()
@@ -63,11 +47,3 @@ class Gantt(tkinter.Frame):
                             edgecolors='black')  # color of borders
 
         fig.show()
-        #canvas = FigureCanvasTkAgg(fig, self)
-        #canvas.draw()
-        #canvas.get_tk_widget().pack(side=tkinter.BOTTOM, fill=tkinter.BOTH, expand=True)
-
-        #toolbar = NavigationToolbar2Tk(canvas, self)
-        #toolbar.update()
-        #canvas._tkcanvas.pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
-        return self

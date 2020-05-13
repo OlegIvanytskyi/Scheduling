@@ -1,5 +1,4 @@
 from params import *
-from Gantt import Graph
 
 
 class ResearchTwoDueDates(tkinter.Frame):
