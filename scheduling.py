@@ -37,6 +37,25 @@ def tight_due_date(jobs, d, start=0):
     return schedule_before_due_date + schedule_after_due_date
 
 
+def loose_due_date(jobs, d):
+    schedule_before_due_date = [[0, job] for job in jobs[::2]]
+    schedule_after_due_date = [[0, job] for job in jobs[1::2]][::-1]  # [::-1] is used to reverse the list
+
+    duration = sum([job[1] for job in schedule_before_due_date])  # sum of all jobs that go before due date
+
+    for job in schedule_before_due_date:
+        job[0] = d - duration
+        duration -= job[1]
+
+    # at this point duration must be equal to d
+
+    for job in schedule_after_due_date:
+        job[0] = duration
+        duration += job[1]
+
+    return schedule_before_due_date + schedule_after_due_date
+
+
 def decide(num_d, num_jobs, jobs, d, num_machines, machines):
     # working with copies not to change original data
     num_jobs_copy = deepcopy(num_jobs)
