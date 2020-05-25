@@ -1,6 +1,17 @@
 from copy import deepcopy
 
 
+# start - zero point (moment of time which indicates the earliest possible beginning of schedule)
+def spt(start, jobs):
+    schedule = []
+    jobs = sorted(jobs)
+
+    for job in jobs:
+        schedule.append((start, job))
+        start += job
+    return schedule
+
+
 def decide(num_d, num_jobs, jobs, d, num_machines, machines):
     # working with copies not to change original data
     num_jobs_copy = deepcopy(num_jobs)
