@@ -2,14 +2,39 @@ from copy import deepcopy
 
 
 # start - zero point (moment of time which indicates the earliest possible beginning of schedule)
-def spt(start, jobs):
+def spt(jobs, start=0):
     schedule = []
     jobs = sorted(jobs)
 
     for job in jobs:
-        schedule.append((start, job))
+        schedule.append([start, job])
         start += job
+
     return schedule
+
+
+def tight_due_date(jobs, d, start=0):
+    schedule_before_due_date = []
+    schedule_after_due_date = []
+
+    tay1 = d
+    tay2 = sum(jobs) - d
+
+    for job in jobs:
+        if tay1 >= tay2:
+            schedule_before_due_date.append([start, job])
+            start += job
+            tay1 -= job
+        else:
+            schedule_after_due_date.insert(0, [0, job])  # setting temporary time of start to 0
+            tay2 -= job
+
+    # setting times when the job is starting
+    for job in schedule_after_due_date:
+        job[0] = start
+        start += job[1]
+
+    return schedule_before_due_date + schedule_after_due_date
 
 
 def decide(num_d, num_jobs, jobs, d, num_machines, machines):
@@ -70,8 +95,8 @@ def loose_due_date(num_jobs, jobs, num_machines, machines):
     return 0
 
 
-def tight_due_date(num_jobs, jobs, num_machines, machines):
-    return 0
+# def tight_due_date(num_jobs, jobs, num_machines, machines):
+#     return 0
 
 
 def impossible(schedule):
