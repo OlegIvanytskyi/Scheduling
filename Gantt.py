@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from scheduling import decide
 
 
-class Gantt():
+class Gantt:
     def __init__(self, path):
         self.filename = path
 
