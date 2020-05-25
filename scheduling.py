@@ -3,8 +3,9 @@ from copy import deepcopy
 
 # start - zero point (moment of time which indicates the earliest possible beginning of schedule)
 def spt(jobs, start=0):
-    schedule = []
     jobs = sorted(jobs)
+
+    schedule = []
 
     for job in jobs:
         schedule.append([start, job])
@@ -14,6 +15,8 @@ def spt(jobs, start=0):
 
 
 def tight_due_date(jobs, d, start=0):
+    jobs = sorted(jobs, reverse=True)
+
     schedule_before_due_date = []
     schedule_after_due_date = []
 
@@ -38,6 +41,8 @@ def tight_due_date(jobs, d, start=0):
 
 
 def loose_due_date(jobs, d):
+    jobs = sorted(jobs, reverse=True)
+
     schedule_before_due_date = [[0, job] for job in jobs[::2]]
     schedule_after_due_date = [[0, job] for job in jobs[1::2]][::-1]  # [::-1] is used to reverse the list
 
@@ -54,6 +59,20 @@ def loose_due_date(jobs, d):
         duration += job[1]
 
     return schedule_before_due_date + schedule_after_due_date
+
+
+def divide(num_d, num_jobs, jobs, d, num_machines, machines):
+    jobs = sorted(jobs, reverse=True)
+    machines = sorted(machines, reverse=True)
+
+    assigned = []
+
+    for _ in range(len(num_d)):
+        due_date_assigned = []
+        #todo
+        assigned.append(due_date_assigned)
+
+    return assigned
 
 
 def decide(num_d, num_jobs, jobs, d, num_machines, machines):
@@ -105,17 +124,6 @@ def SPT(num_jobs, jobs, num_machines, machines):
         if machine == num_machines:
             machine = 0
     return schedule
-
-
-def loose_due_date(num_jobs, jobs, num_machines, machines):
-    machines = sorted(machines)
-    # jobs = sorted(jobs, reverse)
-
-    return 0
-
-
-# def tight_due_date(num_jobs, jobs, num_machines, machines):
-#     return 0
 
 
 def impossible(schedule):
