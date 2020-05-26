@@ -62,14 +62,22 @@ def loose_due_date(jobs, d):
 
 
 def divide(num_d, num_jobs, jobs, d, num_machines, machines):
-    jobs = sorted(jobs, reverse=True)
     machines = sorted(machines, reverse=True)
 
-    assigned = []
+    assigned = []  # list of lists with jobs for each due date
 
-    for _ in range(len(num_d)):
-        due_date_assigned = []
-        #todo
+    for i in range(num_d):
+        due_date_jobs = jobs[i]  # jobs with this due date
+        due_date_jobs = sorted(due_date_jobs, reverse=True)
+
+        for j in range(num_machines, len(due_date_jobs), 2*num_machines):
+            due_date_jobs[j:j+num_machines] = sorted(due_date_jobs[j:j+num_machines])
+
+        # list of lists with jobs for each machine
+        due_date_assigned = [
+            [due_date_jobs[k] for k in range(j, len(due_date_jobs), num_machines)] for j in range(num_machines)
+        ]
+
         assigned.append(due_date_assigned)
 
     return assigned
@@ -131,7 +139,12 @@ def impossible(schedule):
 
 
 def main():
-    pass
+    assigned = divide(1, 13, [[10, 10, 9, 8, 8, 6, 5, 7, 4, 3, 2, 2, 1, 1]], 10, 3, [1, 1, 1])
+    for d in assigned:
+        for m in d:
+            for j in m:
+                print(j, end=' ')
+            print()
 
 
 if __name__ == '__main__':
