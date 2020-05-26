@@ -143,14 +143,7 @@ def move_jobs_between_due_dates(d, schedule):
     return new_jobs_first_due_date + bad_jobs_first_due_date + bad_jobs_second_due_date + new_jobs_second_due_date
 
 
-def kek():
-    assigned = move_jobs_between_due_dates([20, 30], [[[10, 5], [15, 3], [18, 2], [20, 3], [23, 4]],
-                                 [[18, 7], [25, 4], [29, 1], [30, 3], [33, 6]]])
-    print(assigned)
-
-
-def divide(num_d, jobs, num_machines, machines):
-    machines = sorted(machines, reverse=True)
+def divide(num_d, jobs, num_machines):
 
     assigned = []  # list of lists with jobs for each due date
 
@@ -172,63 +165,41 @@ def divide(num_d, jobs, num_machines, machines):
     return assigned
 
 
-def decide(num_d, num_jobs, jobs, d, num_machines, machines):
-    # working with copies not to change original data
-    num_jobs_copy = deepcopy(num_jobs)
-    jobs_copy = deepcopy(jobs)
-    d_copy = deepcopy(d)
-    num_machines_copy = num_machines
-    machines_copy = deepcopy(machines)
-
-    if num_d == 1:
-        return one_due_date(num_jobs_copy, jobs_copy, d_copy, num_machines_copy, machines_copy)
-    elif num_d == 2:
-        return two_due_dates(num_jobs_copy, jobs_copy, d_copy, num_machines_copy, machines_copy)
-    else:
-        # TODO unsupported number of due dates
-        return None
-
-
 def one_due_date(num_jobs, jobs, d, num_machines, machines):
-    jobs = jobs[0]
-    d = d[0]
-    if min(jobs) > d:
-        return SPT(num_jobs, jobs, num_machines, machines)
-    else:
-        schedule = loose_due_date(num_jobs, jobs, num_machines, machines)
+    machines = sorted(machines, reverse=True)
+    assigned = divide(1, jobs, num_machines)
+    # todo continue with multiple machines
 
-        if impossible(schedule):
-            return tight_due_date(num_jobs, jobs, num_machines, machines)
-        return schedule
+    if min(jobs) > d:
+        return spt(jobs)
+
+    schedule = loose_due_date(jobs, d)
+
+    if schedule[0][1] < 0:
+        return tight_due_date(jobs, d)
+    return schedule
 
 
 def two_due_dates(num_jobs, jobs, d, num_machines, machines):
     return 0
 
 
-def SPT(num_jobs, jobs, num_machines, machines):
-    machines = sorted(machines, reverse=True)
-    jobs = sorted(jobs)
+def decide(num_d, num_jobs, jobs, d, num_machines, machines):
+    # working with copies not to change original data
+    jobs_copy = deepcopy(jobs)
+    machines_copy = deepcopy(machines)
 
-    schedule = [[] for _ in range(num_machines)]
-
-    machine = 0
-    times = [0 for _ in range(num_machines)]  # time available for next job
-    for job in jobs:
-        schedule[machine].append((times[machine], job))
-        times[machine] += job
-        machine += 1
-        if machine == num_machines:
-            machine = 0
-    return schedule
-
-
-def impossible(schedule):
-    return True
+    if num_d == 1:
+        return one_due_date(num_jobs[0], jobs_copy, d[0], num_machines, machines_copy)
+    elif num_d == 2:
+        return two_due_dates(num_jobs, jobs_copy, d, num_machines, machines_copy)
+    else:
+        return None
 
 
 def main():
-    kek()
+    assigned = move_jobs_between_due_dates([20, 30], [[[10, 5], [15, 3], [18, 2], [20, 3], [23, 4]],
+                                                      [[18, 7], [25, 4], [29, 1], [30, 3], [33, 6]]])
 
 
 if __name__ == '__main__':
