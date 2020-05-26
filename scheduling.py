@@ -61,7 +61,81 @@ def loose_due_date(jobs, d):
     return schedule_before_due_date + schedule_after_due_date
 
 
-def divide(num_d, num_jobs, jobs, d, num_machines, machines):
+# function for moving jobs that cannot be executed between due dates
+# situation with first loose and second tight due dates (single machine)
+def move_jobs_between_due_dates(d, schedule):
+    possible = d[1] - d[0]  # time available between due dates
+    actual = 0  # time required for all jobs that are currently between due dates
+
+    # jobs that are standing between due dates
+    bad_jobs_first_due_date = []
+    bad_jobs_second_due_date = []
+
+    # jobs that must me moved
+    new_jobs_first_due_date = []
+    new_jobs_second_due_date = []
+
+    # calculate how big the duration of all jobs between due dates is and save these jobs
+    for job in schedule[0]:  # schedule[0] - schedule for the first set of jobs (first due date)
+        if job[0] >= d[0]:  # if time of start of the job is greater than the first due date
+            actual += job[1]
+            bad_jobs_first_due_date.append(job[1])
+        else:
+            new_jobs_first_due_date.append(job[1])  # this job is located before first due date
+    for job in schedule[1]:  # schedule[1] - for the second set of jobs
+        if job[0] < d[1]:  # if time of start of the job is smaller than the second due date
+            actual += job[1]
+            bad_jobs_second_due_date.append(job[1])
+        else:
+            new_jobs_second_due_date.append(job[1])  # this job is located after second due date
+
+    # decide which jobs must be moved
+    while actual > possible:
+        if bad_jobs_first_due_date[0] < bad_jobs_second_due_date[0]:  # choosing the smallest job in two sets
+            change = bad_jobs_first_due_date.pop(0)
+            new_jobs_first_due_date.append(change)
+            actual -= change
+        else:
+            change = bad_jobs_second_due_date.pop(0)
+            new_jobs_second_due_date.append(change)
+            actual -= change
+
+    # sort jobs in respective order (from longer to shorter before due date and vice versa)
+    new_jobs_first_due_date = [[0, job] for job in sorted(new_jobs_first_due_date, reverse=True)]
+    bad_jobs_first_due_date = [[d[0], job] for job in sorted(bad_jobs_first_due_date)]
+
+    bad_jobs_second_due_date = [[0, job] for job in sorted(bad_jobs_second_due_date, reverse=True)]
+    new_jobs_second_due_date = [[d[1], job] for job in sorted(new_jobs_second_due_date)]
+
+    # form new schedules
+    duration = sum([job[1] for job in new_jobs_first_due_date])  # sum of all jobs that go before due date
+
+    for job in new_jobs_first_due_date:
+        job[0] = d[0] - duration
+        duration -= job[1]
+
+    # at this point duration must be equal to d[0]
+
+    for job in bad_jobs_first_due_date:
+        job[0] = duration
+        duration += job[1]
+
+    duration = sum([job[1] for job in bad_jobs_second_due_date])  # sum of all jobs that go before due date
+
+    for job in bad_jobs_second_due_date:
+        job[0] = d[1] - duration
+        duration -= job[1]
+
+    # at this point duration must be equal to d[1]
+
+    for job in new_jobs_second_due_date:
+        job[0] = duration
+        duration += job[1]
+
+    return new_jobs_first_due_date + bad_jobs_first_due_date + bad_jobs_second_due_date + new_jobs_second_due_date
+
+
+def divide(num_d, jobs, num_machines, machines):
     machines = sorted(machines, reverse=True)
 
     assigned = []  # list of lists with jobs for each due date
@@ -71,7 +145,8 @@ def divide(num_d, num_jobs, jobs, d, num_machines, machines):
         due_date_jobs = sorted(due_date_jobs, reverse=True)
 
         for j in range(num_machines, len(due_date_jobs), 2*num_machines):
-            due_date_jobs[j:j+num_machines] = sorted(due_date_jobs[j:j+num_machines])
+            due_date_jobs[j:j+num_machines] = sorted(due_date_jobs[j:j+num_machines])  # sort some sections of jobs
+                                                                                       # in reverse order (wave sort)
 
         # list of lists with jobs for each machine
         due_date_assigned = [
