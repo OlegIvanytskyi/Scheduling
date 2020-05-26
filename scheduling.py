@@ -52,7 +52,8 @@ def loose_due_date(jobs, d):
         job[0] = d - duration
         duration -= job[1]
 
-    # at this point duration must be equal to d
+    # at this point duration must be equal to 0
+    duration = d
 
     for job in schedule_after_due_date:
         job[0] = duration
@@ -71,7 +72,7 @@ def move_jobs_between_due_dates(d, schedule):
     bad_jobs_first_due_date = []
     bad_jobs_second_due_date = []
 
-    # jobs that must me moved
+    # jobs that must me moved + jobs that are standing on another side of due date (not problematic side)
     new_jobs_first_due_date = []
     new_jobs_second_due_date = []
 
@@ -89,9 +90,14 @@ def move_jobs_between_due_dates(d, schedule):
         else:
             new_jobs_second_due_date.append(job[1])  # this job is located after second due date
 
+    # sort jobs than can be moved to move smallest jobs first
+    bad_jobs_first_due_date = sorted(bad_jobs_first_due_date)
+    bad_jobs_second_due_date = sorted(bad_jobs_second_due_date)
+
     # decide which jobs must be moved
     while actual > possible:
-        if bad_jobs_first_due_date[0] < bad_jobs_second_due_date[0]:  # choosing the smallest job in two sets
+        # choosing the smallest job in two sets
+        if bad_jobs_first_due_date and bad_jobs_first_due_date[0] < bad_jobs_second_due_date[0]:
             change = bad_jobs_first_due_date.pop(0)
             new_jobs_first_due_date.append(change)
             actual -= change
@@ -114,7 +120,8 @@ def move_jobs_between_due_dates(d, schedule):
         job[0] = d[0] - duration
         duration -= job[1]
 
-    # at this point duration must be equal to d[0]
+    # at this point duration must be equal to 0
+    duration = d[0]
 
     for job in bad_jobs_first_due_date:
         job[0] = duration
@@ -126,13 +133,20 @@ def move_jobs_between_due_dates(d, schedule):
         job[0] = d[1] - duration
         duration -= job[1]
 
-    # at this point duration must be equal to d[1]
+    # at this point duration must be equal to 0
+    duration = d[1]
 
     for job in new_jobs_second_due_date:
         job[0] = duration
         duration += job[1]
 
     return new_jobs_first_due_date + bad_jobs_first_due_date + bad_jobs_second_due_date + new_jobs_second_due_date
+
+
+def kek():
+    assigned = move_jobs_between_due_dates([20, 30], [[[10, 5], [15, 3], [18, 2], [20, 3], [23, 4]],
+                                 [[18, 7], [25, 4], [29, 1], [30, 3], [33, 6]]])
+    print(assigned)
 
 
 def divide(num_d, jobs, num_machines, machines):
@@ -214,12 +228,7 @@ def impossible(schedule):
 
 
 def main():
-    assigned = divide(1, 13, [[10, 10, 9, 8, 8, 6, 5, 7, 4, 3, 2, 2, 1, 1]], 10, 3, [1, 1, 1])
-    for d in assigned:
-        for m in d:
-            for j in m:
-                print(j, end=' ')
-            print()
+    kek()
 
 
 if __name__ == '__main__':
