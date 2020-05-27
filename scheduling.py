@@ -2,8 +2,8 @@ from copy import deepcopy
 
 
 # start - zero point (moment of time which indicates the earliest possible beginning of schedule)
-def spt(jobs, start=0):
-    jobs = sorted(jobs)
+def spt(jobs, machine=1, start=0):
+    jobs = [machine * job for job in sorted(jobs)]
 
     schedule = []
 
@@ -14,8 +14,8 @@ def spt(jobs, start=0):
     return schedule
 
 
-def tight_due_date(jobs, d, start=0):
-    jobs = sorted(jobs, reverse=True)
+def tight_due_date(jobs, d, machine=1, start=0):
+    jobs = [machine * job for job in sorted(jobs, reverse=True)]
 
     schedule_before_due_date = []
     schedule_after_due_date = []
@@ -40,8 +40,8 @@ def tight_due_date(jobs, d, start=0):
     return schedule_before_due_date + schedule_after_due_date
 
 
-def loose_due_date(jobs, d):
-    jobs = sorted(jobs, reverse=True)
+def loose_due_date(jobs, d, machine=1):
+    jobs = [machine * job for job in sorted(jobs, reverse=True)]
 
     schedule_before_due_date = [[0, job] for job in jobs[::2]]
     schedule_after_due_date = [[0, job] for job in jobs[1::2]][::-1]  # [::-1] is used to reverse the list
@@ -165,18 +165,24 @@ def divide(num_d, jobs, num_machines):
     return assigned
 
 
-def one_due_date(num_jobs, jobs, d, num_machines, machines):
+# jobs = [[], []] : list - jobs for each due date. Second list is empty
+# d : int - is not a list!
+def one_due_date(jobs, d, num_machines, machines):
     machines = sorted(machines, reverse=True)
-    assigned = divide(1, jobs, num_machines)
-    # todo continue with multiple machines
+    assigned = divide(1, jobs, num_machines)[0]  # [0] - to take jobs for the first (and only) due date
 
-    if min(jobs) > d:
-        return spt(jobs)
+    schedule = []
 
-    schedule = loose_due_date(jobs, d)
+    for i in range(num_machines):
+        if min(jobs) > d:
+            schedule.append(spt(assigned[i], machines[i]))
+        else:
+            schedule_single_machine = loose_due_date(assigned[i], d, machines[i])
 
-    if schedule[0][1] < 0:
-        return tight_due_date(jobs, d)
+            if schedule_single_machine[0][1] < 0:
+                schedule.append(tight_due_date(assigned[i], d, machines[i]))
+            else:
+                schedule.append(schedule_single_machine)
     return schedule
 
 
@@ -190,7 +196,7 @@ def decide(num_d, num_jobs, jobs, d, num_machines, machines):
     machines_copy = deepcopy(machines)
 
     if num_d == 1:
-        return one_due_date(num_jobs[0], jobs_copy, d[0], num_machines, machines_copy)
+        return one_due_date(jobs_copy, d[0], num_machines, machines_copy)
     elif num_d == 2:
         return two_due_dates(num_jobs, jobs_copy, d, num_machines, machines_copy)
     else:
