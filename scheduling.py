@@ -140,7 +140,7 @@ def move_jobs_between_due_dates(d, schedule):
         job[0] = duration
         duration += job[1]
 
-    return new_jobs_first_due_date + bad_jobs_first_due_date + bad_jobs_second_due_date + new_jobs_second_due_date
+    return [new_jobs_first_due_date + bad_jobs_first_due_date, bad_jobs_second_due_date + new_jobs_second_due_date]
 
 
 def divide(num_d, jobs, num_machines):
@@ -179,18 +179,50 @@ def one_due_date(jobs, d, num_machines, machines):
         else:
             schedule_single_machine = loose_due_date(assigned[i], d, machines[i])
 
-            if schedule_single_machine[0][1] < 0:
+            if schedule_single_machine[0][0] < 0:
                 schedule.append(tight_due_date(assigned[i], d, machines[i]))
             else:
                 schedule.append(schedule_single_machine)
     return schedule
 
 
-def two_due_dates(num_jobs, jobs, d, num_machines, machines):
-    return 0
+def two_due_dates(jobs, d, num_machines, machines):
+    machines = sorted(machines, reverse=True)
+    assigned = divide(2, jobs, num_machines)
+
+    assigned_first_due_date = assigned[0]
+    assigned_second_due_date = assigned[1]
+
+    schedule = []
+
+    for i in range(num_machines):
+        # build ideal schedules
+        schedule1 = loose_due_date(assigned_first_due_date[i], d[0], machines[i])
+        schedule2 = loose_due_date(assigned_second_due_date[i], d[1], machines[i])
+
+        # if due date not to close ot 0 point AND there is time between two schedules
+        if schedule1[0][0] > 0 and schedule1[-1][0] + schedule1[-1][1] < schedule2[0][0]:
+            schedule.append(schedule1 + schedule2)
+
+        # if first due date is too close to the 0 point AND second one is far away from the first due date
+        elif schedule1[0][0] < 0 and schedule1[-1][0] + schedule1[-1][1] < schedule2[0][0]:
+            schedule.append(tight_due_date(assigned_first_due_date[i], d[0], machines[i]) + schedule2)
+
+        # if first due date is far from 0 point but very close to the second due date
+        elif schedule1[0][0] > 0 and schedule1[-1][0] + schedule1[-1][1] > schedule2[0][0]:
+            schedule.append(move_jobs_between_due_dates(d, schedule1 + schedule2))
+
+        # if both due date are close to 0 point and to each other
+        else:
+            schedule1 = tight_due_date(assigned_first_due_date[i], d[0], machines[i])
+            schedule2 = tight_due_date(assigned_second_due_date[i], d[1], machines[i],
+                                       start=(schedule1[-1][0]+schedule1[-1][1]))  # new 0 point for second schedule
+            schedule.append(schedule1 + schedule2)
+
+    return schedule
 
 
-def decide(num_d, num_jobs, jobs, d, num_machines, machines):
+def decide(num_d, jobs, d, num_machines, machines):
     # working with copies not to change original data
     jobs_copy = deepcopy(jobs)
     machines_copy = deepcopy(machines)
@@ -198,14 +230,19 @@ def decide(num_d, num_jobs, jobs, d, num_machines, machines):
     if num_d == 1:
         return one_due_date(jobs_copy, d[0], num_machines, machines_copy)
     elif num_d == 2:
-        return two_due_dates(num_jobs, jobs_copy, d, num_machines, machines_copy)
+        return two_due_dates(jobs_copy, d, num_machines, machines_copy)
     else:
         return None
 
 
 def main():
-    assigned = move_jobs_between_due_dates([20, 30], [[[10, 5], [15, 3], [18, 2], [20, 3], [23, 4]],
-                                                      [[18, 7], [25, 4], [29, 1], [30, 3], [33, 6]]])
+    schedule = decide(0, 0, 0, 0, 0)
+    for m in range(len(schedule)):
+        print(f'machine {m+1}', end='\t')
+        print(schedule[0], end='\t')
+        if len(schedule[m]) == 2:
+            print(schedule[1], end='\t')
+        print()
 
 
 if __name__ == '__main__':
