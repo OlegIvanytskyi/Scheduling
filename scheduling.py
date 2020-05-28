@@ -174,7 +174,7 @@ def one_due_date(jobs, d, num_machines, machines):
     schedule = []
 
     for i in range(num_machines):
-        if min(jobs) > d:
+        if min(assigned[i]) > d:
             schedule.append(spt(assigned[i], machines[i]))
         else:
             schedule_single_machine = loose_due_date(assigned[i], d, machines[i])
@@ -236,7 +236,13 @@ def decide(num_d, jobs, d, num_machines, machines):
 
 
 def main():
-    schedule = decide(0, 0, 0, 0, 0)
+    num_d = 1
+    jobs = [[5, 6, 7, 8, 9], []]
+    d = [30]
+    num_machines = 1
+    machines = [1]
+
+    schedule = decide(num_d, jobs, d, num_machines, machines)
     for m in range(len(schedule)):
         print(f'machine {m+1}', end='\t')
         print(schedule[0], end='\t')
