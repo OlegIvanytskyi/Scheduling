@@ -228,7 +228,7 @@ class Schedule:
 
         return schedule
 
-    def decide(self, num_d, jobs, d, num_machines, machines):
+    def decide(self, num_d, d, jobs, num_machines, machines):
         # working with copies not to change original data
         jobs_copy = deepcopy(jobs)
         machines_copy = deepcopy(machines)
@@ -262,7 +262,10 @@ def main():
     num_machines = 2
     machines = [1, 2]
 
-    schedule = build_schedule(num_d, jobs, d, num_machines, machines)
+    kek = Schedule()
+    schedule = kek.build_schedule(num_d, d, jobs, num_machines, machines)
+    print(schedule)
+    exit(0)
     for m in range(len(schedule)):
         print(f'machine {m+1}', end='\t')
         print(schedule[m][0], end='\t')
@@ -270,7 +273,7 @@ def main():
             print(schedule[m][1], end='\t')
         print()
 
-    print(f'\nTardiness = {tardiness(d, schedule)}')
+    print(f'\nTardiness = {Schedule.tardiness(d, schedule)}')
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import Schedule
+from Schedule import Schedule
 
 
 class Gantt:
@@ -19,9 +19,8 @@ class Gantt:
             self.num_machines = int(f.readline())
             self.machines = [int(machine) for machine in f.readline().split()]
 
-
     def get_schedule(self):
-        return Schedule.build_schedule(self.num_d, self.num_jobs, self.jobs, self.d, self.num_machines, self.machines)
+        return Schedule().build_schedule(self.num_d, self.d, self.jobs, self.num_machines, self.machines)
 
     def draw_graph(self):
         schedule = self.get_schedule()
