@@ -1,13 +1,11 @@
 import matplotlib.pyplot as plt
-from scheduling import decide
+import Schedule
 
 
 class Gantt:
     def __init__(self, path):
         self.filename = path
 
-
-    def get_schedule(self):
         with open(self.filename, 'r') as f:
             self.num_d = int(f.readline())
             self.num_jobs = []
@@ -20,7 +18,10 @@ class Gantt:
                 self.d.append(int(f.readline()))
             self.num_machines = int(f.readline())
             self.machines = [int(machine) for machine in f.readline().split()]
-        return decide(self.num_d, self.num_jobs, self.jobs, self.d, self.num_machines, self.machines)
+
+
+    def get_schedule(self):
+        return Schedule.build_schedule(self.num_d, self.num_jobs, self.jobs, self.d, self.num_machines, self.machines)
 
     def draw_graph(self):
         schedule = self.get_schedule()
