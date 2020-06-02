@@ -252,7 +252,9 @@ class Schedule:
         return tard
 
     def build_schedule(self, num_d, d, jobs, num_machines, machines):
-        return self.decide(num_d, d, jobs, num_machines, machines)
+        schedule = self.decide(num_d, d, jobs, num_machines, machines)
+        print(self.tardiness(d, schedule))
+        return schedule
 
 
 def main():

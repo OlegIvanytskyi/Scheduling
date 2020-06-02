@@ -29,7 +29,7 @@ class Gantt:
         gnt.set_title('Побудований розклад')
 
         gnt.set_ylim(0, (self.num_machines + 1) * 10 + 10)
-        gnt.set_xlim(0, max([sum([sum([job[1] for job in due_date]) for due_date in machine]) for machine in schedule]) + 5)
+        gnt.set_xlim(0, max([job[0] + job[1] for machine in schedule for due_date in machine for job in due_date]) + 5)
 
         gnt.set_xlabel('Час')
         gnt.set_ylabel('Машина')
