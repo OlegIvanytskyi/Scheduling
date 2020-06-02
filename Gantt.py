@@ -29,7 +29,7 @@ class Gantt:
         gnt.set_title('Побудований розклад')
 
         gnt.set_ylim(0, (self.num_machines + 1) * 10 + 10)
-        gnt.set_xlim(0, max([sum([job[1] for job in machine]) for machine in schedule]) + 5)  # max of all schedules+10 # todo
+        gnt.set_xlim(0, max([sum([sum([job[1] for job in due_date]) for due_date in machine]) for machine in schedule]) + 5)
 
         gnt.set_xlabel('Час')
         gnt.set_ylabel('Машина')
@@ -43,14 +43,16 @@ class Gantt:
 
         # setting the schedules
         for i in range(self.num_machines):
-            gnt.broken_barh(schedule[i], ((i + 1) * 10, 9),
-                            facecolors=('orange', 'green', 'blue') * len(schedule),  # mark each job with diff color
-                            edgecolors='black')  # color of borders
-            for job in schedule[i]:
-                gnt.text(x=job[0] + job[1] / 2,  # x = gorizontal position of the label (center of the bar)
-                         y=(i + 1) * 10 + 4,  # y = vertical position of the label
-                         s=job[1],  # text (length of the job)
-                         ha='center', va='center', color='white', size=15)
+            for j in range(2):
+                gnt.broken_barh(schedule[i][j], ((i + 1) * 10, 9),
+                                facecolors=('orange', 'green', 'blue') * len(self.num_jobs),  # mark each job with diff color
+                                edgecolors='black')  # color of borders
+            for due_date in schedule[i]:
+                for job in due_date:
+                    gnt.text(x=job[0] + job[1] / 2,  # x = gorizontal position of the label (center of the bar)
+                             y=(i + 1) * 10 + 4,  # y = vertical position of the label
+                             s=job[1],  # text (length of the job)
+                             ha='center', va='center', color='white', size=15)
 
         # setting the due dates
         for i in range(self.num_d):

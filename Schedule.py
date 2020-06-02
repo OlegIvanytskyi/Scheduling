@@ -262,8 +262,7 @@ def main():
     num_machines = 2
     machines = [1, 2]
 
-    kek = Schedule()
-    schedule = kek.build_schedule(num_d, d, jobs, num_machines, machines)
+    schedule = Schedule().build_schedule(num_d, d, jobs, num_machines, machines)
     print(schedule)
     exit(0)
     for m in range(len(schedule)):
@@ -273,7 +272,7 @@ def main():
             print(schedule[m][1], end='\t')
         print()
 
-    print(f'\nTardiness = {Schedule.tardiness(d, schedule)}')
+    print(f'\nTardiness = {Schedule().tardiness(d, schedule)}')
 
 
 if __name__ == '__main__':
