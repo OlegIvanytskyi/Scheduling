@@ -1,6 +1,5 @@
 from params import *
 from MainPage import MainPage
-from Gantt import Gantt
 from Test import Test
 from ResearchOneDueDate import ResearchOneDueDate
 from ResearchTwoDueDates import ResearchTwoDueDates
