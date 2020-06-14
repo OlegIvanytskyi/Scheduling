@@ -21,7 +21,7 @@ class ResearchTwoDueDates(tkinter.Frame):
         self.d_menu.grid(row=2, column=1, padx=10, pady=10, sticky='w')
 
         tkinter.Label(self, text='Розміри директивних строків', font=font).grid(row=3, column=0, padx=20, pady=10,
-                                                                               sticky='ew')
+                                                                                sticky='ew')
         self.d_var = tkinter.StringVar()
         self.d_var.set(arr[0])
         self.d_menu = tkinter.OptionMenu(self, self.d_var, *arr)
@@ -60,4 +60,3 @@ class ResearchTwoDueDates(tkinter.Frame):
 
     def kek(self):
         print('kek')
-

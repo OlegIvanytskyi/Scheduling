@@ -1,5 +1,4 @@
 from params import *
-import Gantt
 
 
 class ResearchOneDueDate(tkinter.Frame):
@@ -21,7 +20,8 @@ class ResearchOneDueDate(tkinter.Frame):
         self.d_menu.config(font=font)
         self.d_menu.grid(row=2, column=1, padx=10, pady=10, sticky='w')
 
-        tkinter.Label(self, text='Розмір директивного строку', font=font).grid(row=3, column=0, padx=20, pady=10, sticky='ew')
+        tkinter.Label(self, text='Розмір директивного строку', font=font).grid(row=3, column=0, padx=20, pady=10,
+                                                                               sticky='ew')
         self.d_var = tkinter.StringVar()
         self.d_var.set(arr[0])
         self.d_menu = tkinter.OptionMenu(self, self.d_var, *arr)
