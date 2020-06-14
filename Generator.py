@@ -105,7 +105,7 @@ class Generator:
             else:
                 d.append(d[0] + sum(jobs[1]))
 
-            data.append([1, d, jobs, n_machines, machines])
+            data.append([2, d, jobs, n_machines, machines])
 
         return data
 
