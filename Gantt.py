@@ -21,7 +21,7 @@ class Gantt:
                 self.num_machines = int(f.readline())
                 self.machines = [int(machine) for machine in f.readline().split()]
         except:
-            print('Неправильний формат файлу з вхідними даними\nВипарвте та спробуйте знову')
+            print('Неправильний формат файлу з вхідними даними\nВиправте та спробуйте знову')
             exit(0)
 
     def get_schedule(self):
