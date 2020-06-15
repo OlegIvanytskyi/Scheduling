@@ -98,7 +98,9 @@ class Schedule:
         # decide which jobs must be moved
         while actual > possible:
             # choosing the smallest job in two sets
-            if bad_jobs_first_due_date and bad_jobs_first_due_date[0] < bad_jobs_second_due_date[0]:
+            if (bad_jobs_first_due_date and bad_jobs_second_due_date and
+                    bad_jobs_first_due_date[0] < bad_jobs_second_due_date[0]) or \
+                    (bad_jobs_first_due_date and not bad_jobs_second_due_date):
                 change = bad_jobs_first_due_date.pop(0)
                 new_jobs_first_due_date.append(change)
                 actual -= change
@@ -167,7 +169,6 @@ class Schedule:
     # jobs = [[], []] : list - jobs for each due date. Second list is empty
     # d : int - is not a list!
     def one_due_date(self, jobs, d, num_machines, machines):
-        print('One due date')
         machines = sorted(machines, reverse=True)
         assigned = self.divide(1, jobs, num_machines)[0]  # [0] - to take jobs for the first (and only) due date
 
@@ -175,21 +176,17 @@ class Schedule:
 
         for i in range(num_machines):
             if min(assigned[i]) > d:
-                print('SPT')
                 schedule.append(self.spt(assigned[i], machines[i]))
             else:
                 schedule_single_machine = self.loose_due_date(assigned[i], d, machines[i])
 
                 if schedule_single_machine[0][0] < 0:
-                    print('Situation 1')
                     schedule.append(self.tight_due_date(assigned[i], d, machines[i]))
                 else:
-                    print('Situation 2')
                     schedule.append(schedule_single_machine)
         return schedule
 
     def two_due_dates(self, jobs, d, num_machines, machines):
-        print('Two due dates')
         machines = sorted(machines, reverse=True)
         assigned = self.divide(2, jobs, num_machines)
 
@@ -205,25 +202,25 @@ class Schedule:
 
             # if due date not to close ot 0 point AND there is time between two schedules
             if schedule1[0][0] > 0 and schedule1[-1][0] + schedule1[-1][1] < schedule2[0][0]:
-                print('Situation 1')
+                # print('Situation 1')
                 schedule.append([schedule1, schedule2])
 
             # if first due date is too close to the 0 point AND second one is far away from the first due date
             elif schedule1[0][0] < 0 and schedule1[-1][0] + schedule1[-1][1] < schedule2[0][0]:
-                print('Situation 2')
+                # print('Situation 2')
                 schedule.append([self.tight_due_date(assigned_first_due_date[i], d[0], machines[i]), schedule2])
 
             # if first due date is far from 0 point but very close to the second due date
             elif schedule1[0][0] > 0 and schedule1[-1][0] + schedule1[-1][1] > schedule2[0][0]:
-                print('Situation 3')
+                # print('Situation 3')
                 schedule.append(self.move_jobs_between_due_dates(d, [schedule1, schedule2]))
 
             # if both due date are close to 0 point and to each other
             else:
-                print('Situation 4')
+                # print('Situation 4')
                 schedule1 = self.tight_due_date(assigned_first_due_date[i], d[0], machines[i])
                 schedule2 = self.tight_due_date(assigned_second_due_date[i], d[1], machines[i],
-                                           start=(schedule1[-1][0]+schedule1[-1][1]))  # new 0 point for second schedule
+                                                start=(schedule1[-1][0]+schedule1[-1][1]))  # new 0 point for second schedule
                 schedule.append([schedule1, schedule2])
 
         return schedule
@@ -253,7 +250,6 @@ class Schedule:
 
     def build_schedule(self, num_d, d, jobs, num_machines, machines):
         schedule = self.decide(num_d, d, jobs, num_machines, machines)
-        print(self.tardiness(d, schedule))
         return schedule
 
 

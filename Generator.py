@@ -18,7 +18,12 @@ class Generator:
     def generate_one_due_date(self, num_jobs, d_dist, jobs_dist, num_machines, machines_dist):
         data = []
 
-        for _ in range(100):
+        if self.full_research:
+            length = 1
+        else:
+            length = 100
+
+        for _ in range(length):
             if num_machines == 'S':
                 n_machines = 1
             elif num_jobs == 'M':
@@ -43,11 +48,11 @@ class Generator:
                 n_jobs = n_machines * 20
 
             if jobs_dist == 'S':
-                jobs = [random.randint(1, 10) for _ in range(num_jobs)]
+                jobs = [random.randint(1, 10) for _ in range(n_jobs)]
             elif jobs_dist == 'M':
-                jobs = [random.randint(1, 20) for _ in range(num_jobs)]
+                jobs = [random.randint(1, 20) for _ in range(n_jobs)]
             else:
-                jobs = [random.randint(1, 50) for _ in range(num_jobs)]
+                jobs = [random.randint(1, 50) for _ in range(n_jobs)]
 
             if d_dist == 'S':
                 d = [min(jobs) - 1]
@@ -63,7 +68,12 @@ class Generator:
     def generate_two_due_dates(self, num_jobs, d_dist, jobs_dist, num_machines, machines_dist):
         data = []
 
-        for _ in range(100):
+        if self.full_research:
+            length = 1
+        else:
+            length = 100
+
+        for _ in range(length):
             if num_machines == 'S':
                 n_machines = 1
             elif num_jobs == 'M':
@@ -88,14 +98,14 @@ class Generator:
                 n_jobs = n_machines * 20
 
             if jobs_dist == 'S':
-                jobs = [[random.randint(1, 5) for _ in range(num_jobs / 2)],
-                        [random.randint(1, 5) for _ in range(num_jobs / 2)]]
+                jobs = [[random.randint(2, 5) for _ in range(int(n_jobs / 2))],
+                        [random.randint(2, 5) for _ in range(int(n_jobs / 2))]]
             elif jobs_dist == 'M':
-                jobs = [[random.randint(1, 10) for _ in range(num_jobs / 2)],
-                        [random.randint(1, 10) for _ in range(num_jobs / 2)]]
+                jobs = [[random.randint(2, 10) for _ in range(int(n_jobs / 2))],
+                        [random.randint(2, 10) for _ in range(int(n_jobs / 2))]]
             else:
-                jobs = [[random.randint(1, 20) for _ in range(num_jobs / 2)],
-                        [random.randint(1, 20) for _ in range(num_jobs / 2)]]
+                jobs = [[random.randint(2, 20) for _ in range(int(n_jobs / 2))],
+                        [random.randint(2, 20) for _ in range(int(n_jobs / 2))]]
 
             d = [random.randint(min(jobs[0]) - 1, sum(jobs[0]))]
             if d_dist == 'S':

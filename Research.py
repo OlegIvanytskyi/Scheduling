@@ -1,6 +1,9 @@
 from Generator import Generator
 from Schedule import Schedule
 
+import matplotlib.pyplot as plt
+from numpy import linspace
+
 
 class Research:
     def __init__(self, num_d, params=None):
@@ -11,7 +14,22 @@ class Research:
         return Generator(self.num_d, self.params).generate()
 
     def compare(self, z_arr, perfect_arr):
-        pass
+        fig, plot = plt.subplots()
+        plot.set_title('Дослідження')
+
+        plot.set_ylim(0, max(max(z_arr), max(perfect_arr)))
+        plot.set_xlim(0, len(z_arr))
+
+        plot.set_xlabel('Експеримент')
+        plot.set_ylabel('Цільова функція')
+
+        plot.grid(True)
+
+        x = linspace(1, len(z_arr), num=len(z_arr))
+        plot.plot(x, z_arr, 'ro', x, perfect_arr, 'b--')
+        plt.legend(['Реальна цільова функція', 'Нижня границя'])
+
+        fig.show()
 
     def research(self):
         data = self.get_input()

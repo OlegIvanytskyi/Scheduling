@@ -19,6 +19,10 @@ class Gantt:
             self.num_machines = int(f.readline())
             self.machines = [int(machine) for machine in f.readline().split()]
 
+        if self.num_d < 1 or self.num_d > 2 or len(self.d) < 1 or len(self.d) > 2:
+            print('Неправильний формат файлу з вхідними даними\nВипарвте та спробуйте знову')
+            exit(0)
+
     def get_schedule(self):
         return Schedule().build_schedule(self.num_d, self.d, self.jobs, self.num_machines, self.machines)
 
