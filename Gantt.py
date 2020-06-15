@@ -1,33 +1,52 @@
 import matplotlib.pyplot as plt
 from Schedule import Schedule
+import codecs
 
 
 class Gantt:
     def __init__(self, path):
         self.filename = path
 
-        with open(self.filename, 'r') as f:
-            self.num_d = int(f.readline())
-            self.num_jobs = []
-            self.jobs = []
-            self.d = []
+        try:
+            with open(self.filename, 'r') as f:
+                self.num_d = int(f.readline())
+                self.num_jobs = []
+                self.jobs = []
+                self.d = []
 
-            for _ in range(self.num_d):
-                self.num_jobs.append(int(f.readline()))
-                self.jobs.append([int(job) for job in f.readline().split()])
-                self.d.append(int(f.readline()))
-            self.num_machines = int(f.readline())
-            self.machines = [int(machine) for machine in f.readline().split()]
-
-        if self.num_d < 1 or self.num_d > 2 or len(self.d) < 1 or len(self.d) > 2:
+                for _ in range(self.num_d):
+                    self.num_jobs.append(int(f.readline()))
+                    self.jobs.append([int(job) for job in f.readline().split()])
+                    self.d.append(int(f.readline()))
+                self.num_machines = int(f.readline())
+                self.machines = [int(machine) for machine in f.readline().split()]
+        except:
             print('Неправильний формат файлу з вхідними даними\nВипарвте та спробуйте знову')
             exit(0)
 
     def get_schedule(self):
         return Schedule().build_schedule(self.num_d, self.d, self.jobs, self.num_machines, self.machines)
 
+    def save_result(self, schedule, tardiness):
+        with codecs.open('result.txt', 'w', encoding='utf8') as f:
+            for i in range(self.num_d):
+                f.write(f'{self.d[i]} ')
+            f.write('\n')
+
+            for i in range(self.num_machines):
+                f.write(f'{self.machines[i]}\n')
+
+                for due_date in schedule[i]:
+                    for job in due_date:
+                        f.write(f'{job[0]},{job[1]} ')
+                    f.write('\n')
+
+            f.write(f'Сумарне відхилення = {tardiness}')
+
     def draw_graph(self):
         schedule = self.get_schedule()
+        tardiness = Schedule().tardiness(self.d, schedule)
+        self.save_result(schedule, tardiness)
 
         fig, gnt = plt.subplots()
         gnt.set_title('Побудований розклад')
